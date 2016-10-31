@@ -26,4 +26,22 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * Gets the user groups that this user is a santa for
+     * a
+     * @return \App\UserGroup UserGroup instances
+     */
+    public function santa_of() {
+        return $this->hasMany('\App\UserGroup', 'user_id');
+    }
+
+    /**
+     * Gets the user groups that this user is a recipient for.
+     * 
+     * @return \App\UserGroup UserGroup Instances
+     */
+    public function recipient_of() {
+        return $this->hasMany('\App\UserGroup', 'present_to_user_id');
+    }
 }
