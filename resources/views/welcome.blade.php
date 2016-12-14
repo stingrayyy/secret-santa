@@ -15,7 +15,9 @@
                     Make Me Santa
                 </div>
 
-                <form id="santa-form" method="post" action="/santa">
+                <form id="santa-form" method="post" action="/create">
+                    {{ csrf_field() }}
+
                     <div class="row">
                         <div class="col-md-12 form-heading">
                             About you...
@@ -92,6 +94,14 @@
                         </div>
                         <div class="col-md-6 form-input">
                             <input type="text" name="participant_email_05" class="form-field" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 form-input">
+                            <input type="text" name="participant_name_06" class="form-field" />
+                        </div>
+                        <div class="col-md-6 form-input">
+                            <input type="text" name="participant_email_06" class="form-field" />
                         </div>
                     </div>
 
