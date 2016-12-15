@@ -15,7 +15,8 @@ class SantaGroupController extends Controller
      */
     public function create(Request $request)
     {
-    	/*$this->validate($request, [
+    	// TODO add validation
+        /*$this->validate($request, [
     		'primary_name' => 'required',
     		'primary_email' => 'required|email',
     	]);*/
@@ -64,6 +65,7 @@ class SantaGroupController extends Controller
 
     	DB::transaction(function() {
             // Loop through each record and add a new user
+            // TODO Check the database for the user, get the user id for future use rather than attempting to add a new record
             for($index = 0; $index < $total_users; $index++)
             {
                 $user = new \App\User;
@@ -76,11 +78,13 @@ class SantaGroupController extends Controller
                 $users[$index]['db_id'] = $user->id;
             }
 
+            // Set up a new santa group
     		$santa_group = new \App\SantaGroup;
     		$santa_group->group_name = $users[0]['name'] . '\'s Group';
             $santa_group->group_owner_id = $users[0]['db_id'];
     		$santa_group->save();
 
+            // Link users together in this group
             for($index = 0; $index < $total_users; $index++)
             {
                 $user_group = new \App\UserGroup;
@@ -89,10 +93,12 @@ class SantaGroupController extends Controller
                 $user_group->user_id = $users[$index]['db_id'];
                 $user_group->present_to_user_id = $users[$indexes[$index]]['db_id'];
 
+                // Unique hash for users to review their match at a later date
                 $hash = sha1($santa_group->id . $users[$index]['db_id'] . $users[$indexes[$index]]['db_id'] . date('Y-m-d H:m:s'));
                 $user_group->visit_hash = $hash;
                 $user_group->save();
 
+                // Prepare and send an email to the current user with their unique hash
                 $mail_subject = "You're a Secret Santa";
                 $mail_message = "Hey " . $users[$index]['name'] . ",\n\n
                 You've been added to " . $santa_group->owner->name . "'s secret santa group.\n\n
