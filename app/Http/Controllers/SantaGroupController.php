@@ -16,14 +16,21 @@ class SantaGroupController extends Controller
      */
     public function create(Request $request)
     {
-    	// TODO add validation
+    	/**
+         * TODO add validation rules for each form field:
+         * name: required,alpha and some symbols
+         * email: required, email, unique across all email fields
+         */
         /*$this->validate($request, [
     		'primary_name' => 'required',
     		'primary_email' => 'required|email',
     	]);*/
 
     	$users = array();
-    	$users[] = array('name' => $request['primary_name'], 'email' => $request['primary_email']);
+
+        // TODO change primary name/email to participant 01, increment other fields
+        // TODO loop through participant fields to allow for a theoretically unlimited number of participants
+        $users[] = array('name' => $request['primary_name'], 'email' => $request['primary_email']);
 
     	if($this->isUserSet($request['participant_name_01'], $request['participant_email_01']))
     		$users[] = array('name' => $request['participant_name_01'], 'email' => $request['participant_email_01']);
@@ -62,19 +69,25 @@ class SantaGroupController extends Controller
     		$indexes[] = $number;
     	}
 
-
-        $hash = DB::transaction(function() use($total_users, $users, $indexes) {
-            $root = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/';
+        // Set up the group inside a transaction
+        $hash = DB::transaction(function() use($total_users, $users, $indexes) 
+        {
             // Loop through each record and add a new user
-            // TODO Check the database for the user, get the user id for future use rather than attempting to add a new record
             for($index = 0; $index < $total_users; $index++)
             {
-                $user = new \App\User;
-                $user->name = $users[$index]['name'];
-                $user->email = $users[$index]['email'];
-                $user->password = sha1(date('Y-m-d H:m:s'));
+                // Check for an email first and load the user from the database
+                $user = \App\User::where('email', $users[$index]['email'])->first();
 
-                $user->save();
+                // User doesn't exist, 
+                if(empty($user))
+                {
+                    $user = new \App\User;
+                    $user->name = $users[$index]['name'];
+                    $user->email = $users[$index]['email'];
+                    $user->password = sha1(date('Y-m-d H:m:s'));
+
+                    $user->save();
+                }
 
                 $users[$index]['db_id'] = $user->id;
             }
@@ -85,7 +98,10 @@ class SantaGroupController extends Controller
             $santa_group->group_owner_id = $users[0]['db_id'];
     		$santa_group->save();
 
-            // Link users together in this group
+            // Get the application's root uri - to be used for links in the emails
+            $root = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/';
+
+            // Link users together in this group and send the santa user an email
             for($index = 0; $index < $total_users; $index++)
             {
                 $user_group = new \App\UserGroup;
@@ -113,7 +129,7 @@ class SantaGroupController extends Controller
                 @mail($users[$index]['email'], $mail_subject, $mail_message);
             }
 
-            return $hash;
+            return $primary_user_hash;
     	});
 
         // On success redirect to the view page for this user
