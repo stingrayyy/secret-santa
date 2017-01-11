@@ -62,9 +62,9 @@ class SantaGroupController extends Controller
     		$indexes[] = $number;
     	}
 
-        $root = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/';
 
-    	//DB::transaction(function() {
+        $hash = DB::transaction(function() use($total_users, $users, $indexes) {
+            $root = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/';
             // Loop through each record and add a new user
             // TODO Check the database for the user, get the user id for future use rather than attempting to add a new record
             for($index = 0; $index < $total_users; $index++)
@@ -112,7 +112,9 @@ class SantaGroupController extends Controller
 
                 @mail($users[$index]['email'], $mail_subject, $mail_message);
             }
-    	//});
+
+            return $hash;
+    	});
 
         // On success redirect to the view page for this user
         return redirect()->route('view', ['hash' => $hash]);
