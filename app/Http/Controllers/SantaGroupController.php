@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Routing\Redirector;
 
 class SantaGroupController extends Controller
 {
@@ -63,7 +64,7 @@ class SantaGroupController extends Controller
 
         $root = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/';
 
-    	DB::transaction(function() {
+    	//DB::transaction(function() {
             // Loop through each record and add a new user
             // TODO Check the database for the user, get the user id for future use rather than attempting to add a new record
             for($index = 0; $index < $total_users; $index++)
@@ -98,6 +99,8 @@ class SantaGroupController extends Controller
                 $user_group->visit_hash = $hash;
                 $user_group->save();
 
+                if($index === 0) $primary_user_hash = $hash;
+
                 // Prepare and send an email to the current user with their unique hash
                 $mail_subject = "You're a Secret Santa";
                 $mail_message = "Hey " . $users[$index]['name'] . ",\n\n
@@ -109,7 +112,10 @@ class SantaGroupController extends Controller
 
                 @mail($users[$index]['email'], $mail_subject, $mail_message);
             }
-    	});
+    	//});
+
+        // On success redirect to the view page for this user
+        return redirect()->route('view', ['hash' => $hash]);
     }
 
     /**

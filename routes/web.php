@@ -16,3 +16,6 @@ Route::get('/', function () {
 });
 
 Route::post('/create', 'SantaGroupController@Create');
+
+Route::get('/view/', 'UserGroupController@View');
+Route::get('/view/{hash}', ['as' => 'view', 'uses' => 'UserGroupController@View']);
