@@ -26,44 +26,38 @@ class SantaGroupController extends Controller
     		'primary_email' => 'required|email',
     	]);*/
 
+        // Initialise the users array
     	$users = array();
 
-        // TODO change primary name/email to participant 01, increment other fields
-        // TODO loop through participant fields to allow for a theoretically unlimited number of participants
-        $users[] = array('name' => $request['primary_name'], 'email' => $request['primary_email']);
+        // Load participants from the post array and reassign        
+        $participant_names = $request->input('participant_name');
+        $participant_emails = $request->input('participant_email');
 
-    	if($this->isUserSet($request['participant_name_01'], $request['participant_email_01']))
-    		$users[] = array('name' => $request['participant_name_01'], 'email' => $request['participant_email_01']);
+        $total_participants = count($participant_names);
 
-    	if($this->isUserSet($request['participant_name_02'], $request['participant_email_02']))
-    		$users[] = array('name' => $request['participant_name_02'], 'email' => $request['participant_email_02']);
-
-    	if($this->isUserSet($request['participant_name_03'], $request['participant_email_03']))
-    		$users[] = array('name' => $request['participant_name_03'], 'email' => $request['participant_email_03']);
-
-    	if($this->isUserSet($request['participant_name_04'], $request['participant_email_04']))
-    		$users[] = array('name' => $request['participant_name_04'], 'email' => $request['participant_email_04']);
-
-    	if($this->isUserSet($request['participant_name_05'], $request['participant_email_05']))
-    		$users[] = array('name' => $request['participant_name_05'], 'email' => $request['participant_email_05']);
-
-    	if($this->isUserSet($request['participant_name_06'], $request['participant_email_06']))
-    		$users[] = array('name' => $request['participant_name_06'], 'email' => $request['participant_email_06']);
+        // Loop through each user and add them to the users array if BOTH the name and email are set
+        for($index = 0; $index < $total_participants; $index++)
+        {
+            if($this->isUserSet($participant_names[$index], $participant_emails[$index]))
+                $users[] = array('name' => $participant_names[$index], 'email' => $participant_emails[$index]);
+        }
 
     	// How many users are there?
     	$total_users = count($users);
     	$indexes = array();
 
+        // Loop through each user; make a unique santa:recipient pairing
     	for($index = 0; $index < $total_users; $index++)
     	{
     		$unique_rand_found = false;
 
+            // Repeat until a unique user is found
     		while(!$unique_rand_found)
     		{
     			$number = rand(0, $total_users - 1);
 
-    			if(!(in_array($number, $indexes) || $number == $index))
-    				$unique_rand_found = true; 
+                // A recipient cannot be picked multiple times, they cannot also be santa to themselves
+    			if(!(in_array($number, $indexes) || $number == $index)) $unique_rand_found = true; 
     		}
 
     		$indexes[] = $number;

@@ -26,18 +26,18 @@
 
                     <div class="row">
                         <div class="col-md-6 form-label">
-                            <label for="primary-name">Your Name:</label>
+                            <label>Your Name:</label>
                         </div>
                         <div class="col-md-6 form-label">
-                            <label for="primary-email">Your Email:</label>
+                            <label>Your Email:</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 form-input">
-                            <input type="text" name="primary_name" class="form-field" />
+                            <input type="text" name="participant_name[]" class="form-field" />
                         </div>
                         <div class="col-md-6 form-input">
-                            <input type="text" name="primary_email" class="form-field" />
+                            <input type="text" name="participant_email[]" class="form-field" />
                         </div>
                     </div>
 
@@ -49,59 +49,59 @@
 
                     <div class="row">
                         <div class="col-md-6 form-label">
-                            <label for="primary-name">Their Name:</label>
+                            <label>Their Name:</label>
                         </div>
                         <div class="col-md-6 form-label">
-                            <label for="primary-email">Their Email:</label>
+                            <label>Their Email:</label>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 form-input">
-                            <input type="text" name="participant_name_01" class="form-field" />
+                            <input type="text" name="participant_name[]" class="form-field" />
                         </div>
                         <div class="col-md-6 form-input">
-                            <input type="text" name="participant_email_01" class="form-field" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 form-input">
-                            <input type="text" name="participant_name_02" class="form-field" />
-                        </div>
-                        <div class="col-md-6 form-input">
-                            <input type="text" name="participant_email_02" class="form-field" />
+                            <input type="text" name="participant_email[]" class="form-field" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 form-input">
-                            <input type="text" name="participant_name_03" class="form-field" />
+                            <input type="text" name="participant_name[]" class="form-field" />
                         </div>
                         <div class="col-md-6 form-input">
-                            <input type="text" name="participant_email_03" class="form-field" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 form-input">
-                            <input type="text" name="participant_name_04" class="form-field" />
-                        </div>
-                        <div class="col-md-6 form-input">
-                            <input type="text" name="participant_email_04" class="form-field" />
+                            <input type="text" name="participant_email[]" class="form-field" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 form-input">
-                            <input type="text" name="participant_name_05" class="form-field" />
+                            <input type="text" name="participant_name[]" class="form-field" />
                         </div>
                         <div class="col-md-6 form-input">
-                            <input type="text" name="participant_email_05" class="form-field" />
+                            <input type="text" name="participant_email[]" class="form-field" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 form-input">
-                            <input type="text" name="participant_name_06" class="form-field" />
+                            <input type="text" name="participant_name[]" class="form-field" />
                         </div>
                         <div class="col-md-6 form-input">
-                            <input type="text" name="participant_email_06" class="form-field" />
+                            <input type="text" name="participant_email[]" class="form-field" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 form-input">
+                            <input type="text" name="participant_name[]" class="form-field" />
+                        </div>
+                        <div class="col-md-6 form-input">
+                            <input type="text" name="participant_email[]" class="form-field" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 form-input">
+                            <input type="text" name="participant_name[]" class="form-field" />
+                        </div>
+                        <div class="col-md-6 form-input">
+                            <input type="text" name="participant_email[]" class="form-field" />
                         </div>
                     </div>
 
