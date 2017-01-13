@@ -15,6 +15,18 @@
                     Make Me Santa
                 </div>
 
+                @if(count($errors) > 0)
+                    <div class="alert alert-danger col-md-4 col-md-offset-4 error-dialog">
+                        <p>There's some errors with your input.</p>
+
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <p>{{ $error }}</p>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <form id="santa-form" method="post" action="/create">
                     {{ csrf_field() }}
 

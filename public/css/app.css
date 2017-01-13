@@ -49,3 +49,11 @@ body
 	font-size: 20px;
 	margin: 20px 5px 10px 5px;
 }
+.error-dialog
+{
+	margin-top: 20px;
+}
+.error-dialog p:first-child
+{
+	margin-top: 5px;
+}

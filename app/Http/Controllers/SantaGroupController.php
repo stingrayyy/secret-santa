@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Validator;
 
 class SantaGroupController extends Controller
 {
@@ -16,15 +17,36 @@ class SantaGroupController extends Controller
      */
     public function create(Request $request)
     {
-    	/**
-         * TODO add validation rules for each form field:
-         * name: required,alpha and some symbols
-         * email: required, email, unique across all email fields
+        /*
+         * TODO add more validation rules: 
+         *      Name / email pairs if one or the other is set 
+         *      Minimum 2 participants
+         * These are very likely to require the Validation class to be extended
          */
-        /*$this->validate($request, [
-    		'primary_name' => 'required',
-    		'primary_email' => 'required|email',
-    	]);*/
+    	// VERY basic validation rules
+        $validator = Validator::make($request->all(), [
+            'participant_name.0' => 'required',
+            'participant_email.0' => 'required',
+            'participant_name' => 'min:2',
+            'participant_email' => 'min:2',
+            'participant_name.*' => 'string|max:100',
+            'participant_email.*' => 'email|max:255',
+        ], [ 
+            'participant_name.0.required' => 'Your name is required.',
+            'participant_email.0.required' => 'Your email is required.',
+            'participant_name.*.string' => 'A name is in an incorrect format',
+            'participant_email.*.email' => 'An email is in an incorrect format',
+            'participant_name.*.max' => 'A name exceeds the maximum allowed length',
+            'participant_email.*.max' => 'An email exceeds the maximum allowed length'
+        ]);
+
+        // TODO Need to return more useful and targeted messages
+        // TODO Input being returned should be displayed back on the form
+        if ($validator->fails()) {
+            return redirect('/')
+                        ->withErrors($validator)
+                        ->withInput();
+        }
 
         // Initialise the users array
     	$users = array();
@@ -45,6 +67,10 @@ class SantaGroupController extends Controller
     	// How many users are there?
     	$total_users = count($users);
     	$indexes = array();
+
+        // Redirect back if there are less than two participants
+        // TODO this should be caught in validation, so that an error message can be returned
+        if($total_users < 2) return redirect('/')->withInput();
 
         // Loop through each user; make a unique santa:recipient pairing
     	for($index = 0; $index < $total_users; $index++)
